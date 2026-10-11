@@ -1,0 +1,100 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lendquant"
+version = "0.1.0.dev0"
+description = "Open-source loan-pool math: amortization, IRR/XIRR, static-pool loss curves, SIFMA conventions."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Jean-Paul Ndong", email = "jp@lendquant.com" },
+]
+requires-python = ">=3.11"
+keywords = [
+    "credit",
+    "fixed-income",
+    "loan-pool",
+    "amortization",
+    "irr",
+    "cpr",
+    "cdr",
+    "static-pool",
+    "cashflow",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+    "numpy-financial>=1.0",
+    "pyarrow>=14",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+
+[project.urls]
+Homepage = "https://lendquant.com"
+Documentation = "https://lendquant.com/docs"
+Repository = "https://github.com/lendquant/lendquant"
+Issues = "https://github.com/lendquant/lendquant/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lendquant"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/lendquant",
+    "tests",
+    "README.md",
+    "SPEC.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q --strict-markers"
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
