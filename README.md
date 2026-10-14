@@ -70,15 +70,16 @@ The pool DataFrame carries the full waterfall per MOB —
 loss-adjusted series, bucket by period, or hand them to any other
 analytics layer.
 
-## Other modules
+## More recipes
 
-- **`lendquant.vintage`** — static-pool CNL, empirical CDR / CPR by
-  MOB, cohort blending. Takes long-format `loans` and `events`
-  DataFrames; see the module docstring for the expected schema.
-- **`lendquant.tape`** — canonical loan-tape column schema,
-  LendingClub-style alias canonicalization, YYYYMM vintage parsing,
-  and a validation report with per-column type / range / null-rate
-  findings.
+- [**Rate conventions**](docs/rate-conventions.md) — CPR/SMM,
+  CDR/MDR, and the nominal-vs-effective gotcha for interest rates.
+- [**Measuring vintage loss curves**](docs/vintage-curves.md) —
+  static-pool CNL, empirical CDR / CPR by MOB, and cohort blending
+  from a long-format loans + events table.
+- [**Canonicalizing and validating a loan tape**](docs/loan-tape.md)
+  — regex alias map, multi-format vintage parsing, and the
+  per-column validation report.
 
 ## Scope
 
