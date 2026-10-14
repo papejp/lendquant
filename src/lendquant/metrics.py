@@ -75,24 +75,31 @@ def _scan_bracket(
 
 
 def _solve_rate(f: Callable[[float], float]) -> float:
-    """Find a root of ``f`` on the standard rate bracket; return nan if none."""
-    try:
-        f_lo = f(_RATE_LO)
-        f_hi = f(_RATE_HI)
-    except (OverflowError, ValueError, ZeroDivisionError):
-        f_lo = f_hi = math.nan
-    if math.isfinite(f_lo) and math.isfinite(f_hi) and f_lo * f_hi < 0:
+    """Find a root of ``f`` on the standard rate bracket; return nan if none.
+
+    Numpy floating-point warnings (divide-by-zero, overflow) are silenced
+    here — the scan deliberately probes extreme rates to find a sign
+    change, and the resulting infinities are expected signal, not an
+    error worth surfacing to the caller.
+    """
+    with np.errstate(all="ignore"):
         try:
-            return float(brentq(f, _RATE_LO, _RATE_HI, xtol=1e-12, maxiter=200))
+            f_lo = f(_RATE_LO)
+            f_hi = f(_RATE_HI)
+        except (OverflowError, ValueError, ZeroDivisionError):
+            f_lo = f_hi = math.nan
+        if math.isfinite(f_lo) and math.isfinite(f_hi) and f_lo * f_hi < 0:
+            try:
+                return float(brentq(f, _RATE_LO, _RATE_HI, xtol=1e-12, maxiter=200))
+            except (RuntimeError, ValueError):
+                pass
+        bracket = _scan_bracket(f, _RATE_LO, _RATE_HI, _SCAN_POINTS)
+        if bracket is None:
+            return math.nan
+        try:
+            return float(brentq(f, bracket[0], bracket[1], xtol=1e-12, maxiter=200))
         except (RuntimeError, ValueError):
-            pass
-    bracket = _scan_bracket(f, _RATE_LO, _RATE_HI, _SCAN_POINTS)
-    if bracket is None:
-        return math.nan
-    try:
-        return float(brentq(f, bracket[0], bracket[1], xtol=1e-12, maxiter=200))
-    except (RuntimeError, ValueError):
-        return math.nan
+            return math.nan
 
 
 def npv(cashflows: ArrayLike, rate_m: float) -> float:
