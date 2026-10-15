@@ -55,8 +55,8 @@ dev = [
 [project.urls]
 Homepage = "https://lendquant.com"
 Documentation = "https://lendquant.com/docs"
-Repository = "https://github.com/lendquant/lendquant"
-Issues = "https://github.com/lendquant/lendquant/issues"
+Repository = "https://github.com/papejp/lendquant"
+Issues = "https://github.com/papejp/lendquant/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/lendquant"]
